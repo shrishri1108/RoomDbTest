@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:tools="http://schemas.android.com/tools"
+android:id="@+id/nav_flow"
+app:startDestination="@id/UserListFragment">
+<fragment
+    android:id="@+id/UserListFragment"
+    android:name="com.example.roomdb.UserListFragment"
+    android:label="UserListFragment"
+    tools:layout="@layout/fragment_user_list">
+    <action
+        android:id="@+id/action_mobile_navigation_to_EditDetails"
+        app:destination="@id/EditDetailFragment" />
+    <action
+        android:id="@+id/action_mobile_navigation_to_UserDetails"
+        app:destination="@id/UserDetailFragment" />
+</fragment>
+<fragment
+    android:id="@+id/EditDetailFragment"
+    android:name="com.example.roomdb.EditDetailFragment"
+    android:label="EditDetailFragment"
+    tools:layout="@layout/fragment_edit_detail" >
+    <action
+        android:id="@+id/action_EditDetailFragment_to_userList_fragment"
+        app:destination="@id/UserListFragment" />
+</fragment>
+
+<fragment
+    android:id="@+id/UserDetailFragment"
+    android:name="com.example.roomdb.UserDetailFragment"
+    android:label="UserDetailFragment"
+    tools:layout="@layout/fragment_user_detail" >
+    <action
+        android:id="@+id/action_UserDetailFragment_to_userList_fragment"
+        app:destination="@id/UserListFragment" />
+</fragment>
+
+</navigation>
