@@ -51,9 +51,13 @@ class EditDetailFragment : Fragment() {
                 withContext(Dispatchers.IO) {
                     MyApp.database.userDao().insertUser(
                         UserEntity(
+                            birthDate = editDetailViewModel.userDetailsResponse.value?.birthDate?: "",
+                            gender = editDetailViewModel.userDetailsResponse.value?.gender?: "",
+                            email = editDetailViewModel.userDetailsResponse.value?.email?: "",
+                            image = editDetailViewModel.userDetailsResponse.value?.image?: "",
                             user_id = id.toString(),
                             username = binding.etName.text.toString(),
-                            userphone = binding.etPhone.text.toString()
+                            phone = binding.etPhone.text.toString()
                         )
                     )
 

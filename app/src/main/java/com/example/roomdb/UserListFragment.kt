@@ -36,13 +36,13 @@ class UserListFragment : Fragment(), UserListAdapter.OnClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        adapter = UserListAdapter(ArrayList<User>(), this@UserListFragment)
+        adapter = UserListAdapter(ArrayList<UserEntity>(), this@UserListFragment)
 
         binding.rvUserList.adapter = adapter
         activity?.runOnUiThread {
             userListViewModel.userResponse.observe(viewLifecycleOwner) { response ->
                 if (!response.users.isNullOrEmpty()) {
-                    adapter.refreshList(response.users)
+//                    adapter.refreshList(response.users)
                     // Launch a coroutine to insert users into the database
                     lifecycleScope.launch {
                         withContext(Dispatchers.IO) {
@@ -51,8 +51,13 @@ class UserListFragment : Fragment(), UserListAdapter.OnClickListener {
                                 MyApp.database.userDao().insertUser(
                                     UserEntity(
                                         user_id = user.id.toString(),
-                                        username = user.lastName,
-                                        userphone = user.phone
+                                        username = user.firstName + " " + user.lastName,
+                                        phone = user.phone,
+                                        birthDate = user.birthDate,
+                                        gender = user.gender,
+                                        email = user.email,
+                                        image = user.image,
+
                                     )
                                 )
                             }
@@ -69,13 +74,18 @@ class UserListFragment : Fragment(), UserListAdapter.OnClickListener {
 
     override fun onResume() {
         super.onResume()
-        userListViewModel.getUserList()
+
+        lifecycleScope.launch {
+            withContext(Dispatchers.IO) {
+                userListViewModel.getUserList()
+            }
+        }
     }
 
     @SuppressLint("CommitTransaction")
-    override fun onUserClick(user: User, position: Int) {
+    override fun onUserClick(user: UserEntity, position: Int) {
         val bundle = Bundle()
-        bundle.putString("id", user.id.toString())
+        bundle.putString("id", user.user_id.toString())
         val userDetailFragment = UserDetailFragment()
         userDetailFragment.arguments = bundle
         activity?.supportFragmentManager
@@ -86,9 +96,9 @@ class UserListFragment : Fragment(), UserListAdapter.OnClickListener {
 //        findNavController().navigate(R.id.action_mobile_navigation_to_UserDetails)
     }
 
-    override fun onEditClick(user: User, position: Int) {
+    override fun onEditClick(user: UserEntity, position: Int) {
         val bundle = Bundle()
-        bundle.putString("id", user.id.toString())
+        bundle.putString("id", user.user_id.toString())
         val editDetailFragment = EditDetailFragment()
         editDetailFragment.arguments = bundle
         activity?.supportFragmentManager?.beginTransaction()
@@ -98,11 +108,11 @@ class UserListFragment : Fragment(), UserListAdapter.OnClickListener {
 //        findNavController().navigate(R.id.action_mobile_navigation_to_EditDetails)
     }
 
-    override fun onDeleteClick(user: User, position: Int) {
+    override fun onDeleteClick(user: UserEntity, position: Int) {
         deleteUserFromRoom(user)
     }
 
-    private fun deleteUserFromRoom(user: User) {
+    private fun deleteUserFromRoom(user: UserEntity) {
 
     }
 }
